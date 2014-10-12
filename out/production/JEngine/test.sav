@@ -1,0 +1,282 @@
+{
+  "name" : "test.sav",
+  "objects" : {
+    "crate4" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate4_synth_anm",
+      "name" : "crate4",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 64,
+      "y" : 64,
+      "additionalData" : { }
+    },
+    "crate3" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate3_synth_anm",
+      "name" : "crate3",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 48,
+      "y" : 48,
+      "additionalData" : { }
+    },
+    "crate5" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate5_synth_anm",
+      "name" : "crate5",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 80,
+      "y" : 80,
+      "additionalData" : { }
+    },
+    "player" : {
+      "className" : "andrews.jengine.objects.Player",
+      "sprite" : "player_synth_anm",
+      "name" : "player",
+      "depth" : 0,
+      "visible" : true,
+      "x" : 303,
+      "y" : 18,
+      "additionalData" : {
+        "direction" : 270
+      }
+    },
+    "controller" : {
+      "className" : "andrews.jengine.objects.Controller",
+      "sprite" : "controller_synth_anm",
+      "name" : "controller",
+      "depth" : 0,
+      "visible" : false,
+      "x" : 0,
+      "y" : 0,
+      "additionalData" : { }
+    },
+    "crate0" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate0_synth_anm",
+      "name" : "crate0",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 0,
+      "y" : 0,
+      "additionalData" : { }
+    },
+    "crate1" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate1_synth_anm",
+      "name" : "crate1",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 16,
+      "y" : 16,
+      "additionalData" : { }
+    },
+    "crate2" : {
+      "className" : "andrews.jengine.objects.Crate",
+      "sprite" : "crate2_synth_anm",
+      "name" : "crate2",
+      "depth" : 5,
+      "visible" : true,
+      "x" : 32,
+      "y" : 32,
+      "additionalData" : { }
+    }
+  },
+  "backgrounds" : {
+    "new_game_splash_screen_bg" : {
+      "className" : "andrews.jengine.Background",
+      "sprite" : "new_game_splash_screen_anm",
+      "name" : "new_game_splash_screen_bg",
+      "visible" : true,
+      "additionalData" : { }
+    },
+    "map1_bg" : {
+      "className" : "andrews.jengine.Background",
+      "sprite" : "map1_bg_synth_anm",
+      "name" : "map1_bg",
+      "visible" : true,
+      "additionalData" : { }
+    },
+    "main_menu_bg" : {
+      "className" : "andrews.jengine.Background",
+      "sprite" : "main_menu_bg_synth_anm",
+      "name" : "main_menu_bg",
+      "visible" : true,
+      "additionalData" : { }
+    }
+  },
+  "rooms" : {
+    "new_game_splash_screen_room" : {
+      "className" : "andrews.jengine.rooms.NewGameSplashScreenRoom",
+      "background" : "new_game_splash_screen_bg",
+      "objectsIDs" : [ "controller" ],
+      "name" : "new_game_splash_screen_room",
+      "additionalData" : { }
+    },
+    "main_menu_room" : {
+      "className" : "andrews.jengine.rooms.MainMenuRoom",
+      "background" : "main_menu_bg",
+      "objectsIDs" : [ "controller" ],
+      "name" : "main_menu_room",
+      "additionalData" : { }
+    },
+    "map1_room" : {
+      "className" : "andrews.jengine.rooms.Map1",
+      "background" : "map1_bg",
+      "objectsIDs" : [ "controller", "player", "crate0", "crate1", "crate2", "crate3", "crate4", "crate5" ],
+      "name" : "map1_room",
+      "additionalData" : { }
+    }
+  },
+  "currentRoom" : "map1_room",
+  "generatedAnimations" : {
+    "crate2_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate2_synth_anm"
+    },
+    "player_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "hero.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        },
+        "1" : {
+          "sprite" : "hero_left.png",
+          "id" : 1,
+          "nextSpeed" : 12
+        },
+        "2" : {
+          "sprite" : "hero.png",
+          "id" : 2,
+          "nextSpeed" : 12
+        },
+        "3" : {
+          "sprite" : "hero.png",
+          "id" : 3,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 1,
+      "name" : "player_synth_anm"
+    },
+    "crate4_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate4_synth_anm"
+    },
+    "crate3_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate3_synth_anm"
+    },
+    "controller_synth_anm" : {
+      "steps" : { },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "controller_synth_anm"
+    },
+    "crate0_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate0_synth_anm"
+    },
+    "crate5_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate5_synth_anm"
+    },
+    "crate1_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "Blockstone.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "crate1_synth_anm"
+    },
+    "main_menu_bg_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "logo.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "main_menu_bg_synth_anm"
+    },
+    "map1_bg_synth_anm" : {
+      "steps" : {
+        "0" : {
+          "sprite" : "map1.png",
+          "id" : 0,
+          "nextSpeed" : 12
+        }
+      },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "map1_bg_synth_anm"
+    },
+    "new_game_splash_screen_bg_synth_anm" : {
+      "steps" : { },
+      "isPlaying" : false,
+      "countFrames" : -1,
+      "currentStep" : 0,
+      "name" : "new_game_splash_screen_bg_synth_anm"
+    }
+  }
+}
