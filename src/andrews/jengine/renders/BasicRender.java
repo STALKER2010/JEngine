@@ -1,14 +1,14 @@
 package andrews.jengine.renders;
 
+import andrews.jengine.Background;
 import andrews.jengine.Game;
 import andrews.jengine.GameObject;
 import andrews.jengine.Room;
-import andrews.jengine.modules.Resources;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.ConcurrentModificationException;
 
 import static andrews.jengine.DB.db;
 
@@ -41,22 +41,35 @@ public class BasicRender {
         return true;
     }
 
+    public final java.util.List<GameObject> objs = new ArrayList<>();
+
     public void render(final Room room) {
         if (!isInitialized) {
             System.err.println("BasicRender: Render not initialized");
             return;
         }
         gl = bss.getDrawGraphics();
-        gl.setColor(Color.black);
+        gl.setColor(Color.white);
         gl.fillRect(0, 0, game.getWidth(), game.getHeight());
+        gl.setColor(Color.black);
         {
-            Resources.sprite(Resources.animation(db.backgrounds.get(room.background).sprite).getStep().sprite)
-                    .draw(gl, 0, 0);
-            java.util.List<GameObject> objs = new ArrayList<>(db.objects.values());
-            Collections.sort(objs, GameObject.compareByDepth);
+            if (room.background != null) {
+                final Background b = db.backgrounds.get(room.background);
+                if (b != null) {
+                    b.draw(gl);
+                }
+            }
             for (GameObject o : objs) {
                 if (room.objectsIDs.contains(o.name)) {
-                    o.render(gl);
+                    if (o.visible) {
+                        try {
+                            o.render(gl);
+                        } catch (Exception e) {
+                            if (!(e instanceof ConcurrentModificationException)) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
         }

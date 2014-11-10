@@ -11,8 +11,9 @@ public class GameObject {
     public String name = "";
     public int depth = 0;
     public boolean visible = true;
-    public int x = 0;
-    public int y = 0;
+    public double x = 0;
+    public double y = 0;
+    public boolean redraw = true;
 
     public GameObject() {
     }
@@ -34,13 +35,11 @@ public class GameObject {
 
     @JsonIgnore
     public void render(Graphics g) {
-        if (visible) {
-            final Animation animation = Resources.animation(sprite);
-            if (animation != null) {
-                Animation.Step step = animation.getStep();
-                if ((step != null) && (step.sprite != null)) {
-                    Resources.sprite(step.sprite).draw(g, x, y);
-                }
+        final Animation animation = Resources.animation(sprite);
+        if (animation != null) {
+            Animation.Step step = animation.getStep();
+            if ((step != null) && (step.sprite != null)) {
+                Resources.sprite(step.sprite).draw(g, x, y);
             }
         }
     }
@@ -48,7 +47,7 @@ public class GameObject {
     /**
      * When key is NOW pressed
      *
-     * @param keycode
+     * @param keycode Which key is pressed
      */
     @JsonIgnore
     public void onKeyPress(int keycode) {
@@ -58,7 +57,7 @@ public class GameObject {
     /**
      * When key was pressed and released.
      *
-     * @param keycode
+     * @param keycode Which key is pressed
      */
     @JsonIgnore
     public void onKey(int keycode) {

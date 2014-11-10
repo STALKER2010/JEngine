@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DB {
-	public Map<String, GameObject> objects = new ConcurrentHashMap<>();
-	public Map<String, Background> backgrounds = new ConcurrentHashMap<>();
-	public Map<String, Room> rooms = new ConcurrentHashMap<>();
+	public final Map<String, GameObject> objects = new ConcurrentHashMap<>();
+	public final Map<String, Background> backgrounds = new ConcurrentHashMap<>();
+	public final Map<String, Room> rooms = new ConcurrentHashMap<>();
 	public static final DB db;
 	static {
 		db = new DB();

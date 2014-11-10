@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collections;
 
 import static andrews.jengine.DB.db;
 
@@ -81,7 +82,7 @@ public class Game extends Canvas implements Runnable {
     public void init() {
         resources = new Resources(this);
         soundEngine = new SoundEngine(this);
-        saveGame = new SaveGame(this);
+        saveGame = new SaveGame();
         render = new BasicRender(this);
         unstableState = false;
         addKeyListener(new Keyboard());
@@ -103,9 +104,12 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
-        db.rooms.get(currentRoom).update();
+        final Room room = db.rooms.get(currentRoom);
+        room.update();
         for (GameObject o : db.objects.values()) {
-            o.update();
+            if (room.objectsIDs.contains(o.name)) {
+                o.update();
+            }
         }
         for (Animation a : resources.animations.internal.values()) {
             a.update();
@@ -113,6 +117,9 @@ public class Game extends Canvas implements Runnable {
         for (Animation a : resources.animations.generated.values()) {
             a.update();
         }
+        render.objs.clear();
+        render.objs.addAll(db.objects.values());
+        Collections.sort(render.objs, GameObject.compareByDepth);
     }
 
     public static int WIDTH = 1094;
@@ -126,8 +133,8 @@ public class Game extends Canvas implements Runnable {
         game.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         game.frame.setLayout(new BorderLayout());
         game.frame.add(game, BorderLayout.CENTER);
-        game.frame.pack();
         game.frame.setResizable(false);
+        game.frame.pack();
         game.frame.setVisible(true);
         game.start();
 

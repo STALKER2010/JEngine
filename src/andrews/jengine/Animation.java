@@ -97,8 +97,7 @@ public class Animation {
 			}
 			return s;
 		} else {
-            new RuntimeException("Step No. " + currentStep + " not found!")
-                    .printStackTrace(System.err);
+            System.out.println("Step No. " + currentStep + " not found!");
             return null;
         }
 	}

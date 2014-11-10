@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk7.Jdk7Module;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fasterxml.jackson.module.mrbean.MrBeanModule;
+import com.fasterxml.jackson.module.paranamer.ParanamerModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,14 +21,15 @@ import java.util.*;
 public class SaveGame {
     public final ObjectMapper mapper;
 
-    public SaveGame(final Game game) {
+    public SaveGame() {
         mapper = new ObjectMapper();
         mapper.registerModule(new Jdk7Module());
         mapper.registerModule(new AfterburnerModule());
         mapper.registerModule(new MrBeanModule());
-        //mapper.registerModule(new ParanamerModule());
+        mapper.registerModule(new ParanamerModule());
         //mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         mapper.enable(SerializationFeature.WRITE_NULL_MAP_VALUES);
+        mapper.enable(SerializationFeature.FAIL_ON_SELF_REFERENCES);
         mapper.enable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
         mapper.enable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
         mapper.enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
@@ -43,13 +45,16 @@ public class SaveGame {
     public void listSaves() {
         final File save_dir = new File(SAVE_DIR);
         if (save_dir.exists() && save_dir.canRead() && save_dir.canExecute()) {
-            for (File f : save_dir.listFiles()) {
-                if (f.canRead()) {
-                    if (f.getName().endsWith(".sav")) {
-                        final SaveGameItem save = new SaveGameItem();
-                        save.name = f.getName();
-                        save.path = f.getAbsolutePath();
-                        saves.put(save.name, save);
+            File[] fList = save_dir.listFiles();
+            if (fList != null) {
+                for (File f : fList) {
+                    if (f.canRead()) {
+                        if (f.getName().endsWith(".sav")) {
+                            final SaveGameItem save = new SaveGameItem();
+                            save.name = f.getName();
+                            save.path = f.getAbsolutePath();
+                            saves.put(save.name, save);
+                        }
                     }
                 }
             }
@@ -58,38 +63,18 @@ public class SaveGame {
         }
     }
 
-    public <T extends Room, T1 extends GameObject, T2 extends Background> void loadGame(SaveGameItem save) {
+    public void loadGame(SaveGameItem save) {
         Game.instance.unstableState = true;
         try {
             save = mapper.readValue(new File(save.path), SaveGameItem.class);
             DB.db.rooms.clear();
             DB.db.objects.clear();
             DB.db.backgrounds.clear();
-            for (Map.Entry<String, SaveGameItem.RoomData> rd : save.rooms.entrySet()) {
-                Class<?> cgv = Class.forName(rd.getValue().className);
-                if (cgv != null) {
-                    Class<? extends Room> cv = cgv.asSubclass(Room.class);
-                    T v = (T) cv.newInstance();
-                    v.name = rd.getValue().name;
-                    v.objectsIDs = rd.getValue().objectsIDs;
-                    v.background = rd.getValue().background;
-                    for (Map.Entry<String, Object> adds : rd.getValue().additionalData.entrySet()) {
-                        try {
-                            Field f = cv.getField(adds.getKey());
-                            f.setAccessible(true);
-                            f.set(v, adds.getValue());
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace(System.err);
-                        }
-                    }
-                    DB.db.rooms.put(rd.getKey(), v);
-                }
-            }
             for (Map.Entry<String, SaveGameItem.BackgroundData> rd : save.backgrounds.entrySet()) {
                 Class<?> cgv = Class.forName(rd.getValue().className);
                 if (cgv != null) {
                     Class<? extends Background> cv = cgv.asSubclass(Background.class);
-                    T2 v = (T2) cv.newInstance();
+                    Background v = cv.newInstance();
                     v.name = rd.getValue().name;
                     v.sprite = rd.getValue().sprite;
                     v.visible = rd.getValue().visible;
@@ -105,15 +90,36 @@ public class SaveGame {
                     DB.db.backgrounds.put(rd.getKey(), v);
                 }
             }
+            for (Map.Entry<String, SaveGameItem.RoomData> rd : save.rooms.entrySet()) {
+                Class<?> cgv = Class.forName(rd.getValue().className);
+                if (cgv != null) {
+                    Class<? extends Room> cv = cgv.asSubclass(Room.class);
+                    Room v = cv.newInstance();
+                    v.name = rd.getValue().name;
+                    v.objectsIDs = rd.getValue().objectsIDs;
+                    v.background = rd.getValue().background;
+                    for (Map.Entry<String, Object> adds : rd.getValue().additionalData.entrySet()) {
+                        try {
+                            Field f = cv.getField(adds.getKey());
+                            f.setAccessible(true);
+                            f.set(v, adds.getValue());
+                        } catch (NoSuchFieldException e) {
+                            e.printStackTrace(System.err);
+                        }
+                    }
+                    DB.db.rooms.put(rd.getKey(), v);
+                }
+            }
             for (Map.Entry<String, SaveGameItem.ObjectData> rd : save.objects.entrySet()) {
                 Class<?> cgv = Class.forName(rd.getValue().className);
                 if (cgv != null) {
                     Class<? extends GameObject> cv = cgv.asSubclass(GameObject.class);
-                    T1 v = (T1) cv.newInstance();
+                    GameObject v = cv.newInstance();
                     v.name = rd.getValue().name;
                     v.sprite = rd.getValue().sprite;
                     v.depth = rd.getValue().depth;
                     v.visible = rd.getValue().visible;
+                    v.redraw = rd.getValue().redraw;
                     v.x = rd.getValue().x;
                     v.y = rd.getValue().y;
                     for (Map.Entry<String, Object> adds : rd.getValue().additionalData.entrySet()) {
@@ -168,6 +174,7 @@ public class SaveGame {
             v.sprite = rd.getValue().sprite;
             v.depth = rd.getValue().depth;
             v.visible = rd.getValue().visible;
+            v.redraw = rd.getValue().redraw;
             v.x = rd.getValue().x;
             v.y = rd.getValue().y;
             final List<String> names = Arrays.asList("name", "sprite", "depth", "visible", "x", "y", "compareByDepth");
@@ -227,8 +234,9 @@ public class SaveGame {
             public String name = "";
             public int depth = 0;
             public boolean visible = true;
-            public int x = 0;
-            public int y = 0;
+            public double x = 0;
+            public double y = 0;
+            public boolean redraw = true;
             public Map<String, Object> additionalData = new HashMap<>();
         }
 
