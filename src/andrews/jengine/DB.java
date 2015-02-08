@@ -6,17 +6,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DB {
-	public final Map<String, GameObject> objects = new ConcurrentHashMap<>();
-	public final Map<String, Background> backgrounds = new ConcurrentHashMap<>();
-	public final Map<String, Room> rooms = new ConcurrentHashMap<>();
-	public static final DB db;
-	static {
-		db = new DB();
-	}
+    public final Map<String, GameObject> objects = new ConcurrentHashMap<>();
+    public final Map<String, Background> backgrounds = new ConcurrentHashMap<>();
+    public final Map<String, Room> rooms = new ConcurrentHashMap<>();
+    public static final DB db;
+
+    static {
+        db = new DB();
+    }
 
     @JsonIgnore
-	public void onGameLoaded(final Game game) {
-	}
+    public void onGameLoaded(final Game game) {
+    }
 
     @JsonIgnore
     public String getFreeName(String prefix) {

@@ -13,11 +13,14 @@ import java.util.Map;
 public class SoundEngine {
     public SoundEngine(final Game game) {
     }
+
     public Map<String, Media> sounds = new HashMap<>();
+
     public void load(final String path) {
         Media m = new Media(path);
         sounds.put(path, m);
     }
+
     public void play(final String path) {
         if (sounds.containsKey(path)) {
             final MediaPlayer mediaPlayer = new MediaPlayer(sounds.get(path));

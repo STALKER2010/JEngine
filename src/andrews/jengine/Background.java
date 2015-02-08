@@ -6,17 +6,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.awt.*;
 
 public class Background {
-	public String sprite = "";
-	public String name = "";
-	public boolean visible = true;
+    public String sprite = "";
+    public String name = "";
+    public boolean visible = true;
 
     public Background() {
 
     }
 
     @JsonIgnore
-	public Background(String name, Sprite sprite) {
-		this.name = name;
+    public Background(String name, Sprite sprite) {
+        this.name = name;
         this.sprite = name + "_synth_anm";
         final Animation animation = new Animation(this.sprite);
         animation.currentStep = 0;
@@ -25,7 +25,7 @@ public class Background {
             animation.addStep(sprite);
         }
         Game.instance.resources.animations.generated.put(this.sprite, animation);
-	}
+    }
 
     @JsonIgnore
     public void draw(final Graphics g) {
