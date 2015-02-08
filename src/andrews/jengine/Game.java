@@ -46,7 +46,10 @@ public class Game extends Canvas implements Runnable {
 
     public void run() {
         int loops;
-        init();
+        if (!init()) {
+            System.err.println("Failed to initialized Game");
+            return;
+        }
 
         long start = System.currentTimeMillis();
         int fps = 0;
@@ -79,7 +82,7 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
-    public void init() {
+    public boolean init() {
         resources = new Resources(this);
         soundEngine = new SoundEngine(this);
         saveGame = new SaveGame();
@@ -89,9 +92,11 @@ public class Game extends Canvas implements Runnable {
         addMouseListener(mouseListener);
         if (!render.init()) {
             System.err.println("Game: Render not initialized correctly");
+            return false;
         }
         db.onGameLoaded(this);
         currentRoom = "main_menu_room";
+        return true;
     }
 
     private BasicRender render;
@@ -106,7 +111,7 @@ public class Game extends Canvas implements Runnable {
     public void update() {
         final Room room = db.rooms.get(currentRoom);
         room.update();
-        for (GameObject o : db.objects.values()) {
+        for (final GameObject o : db.objects.values()) {
             if (room.objectsIDs.contains(o.name)) {
                 o.update();
             }

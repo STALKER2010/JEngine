@@ -1,6 +1,7 @@
 package andrews.jengine.modules;
 
 import andrews.jengine.*;
+import andrews.jengine.utils.JEngineToSave;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +38,11 @@ public class SaveGame {
         mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
         mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        if (OBJECT_NAME == null) {
+            OBJECT_NAME = GameObject.class.getSimpleName();
+            BACKGROUND_NAME = Background.class.getSimpleName();
+            ROOM_NAME = Room.class.getSimpleName();
+        }
     }
 
     public Map<String, SaveGameItem> saves = new HashMap<>();
@@ -62,6 +68,10 @@ public class SaveGame {
             System.err.println("SaveGame: Access to dir with saves is denied!");
         }
     }
+
+    private static String OBJECT_NAME = null;
+    private static String ROOM_NAME = null;
+    private static String BACKGROUND_NAME = null;
 
     public void loadGame(SaveGameItem save) {
         Game.instance.unstableState = true;
@@ -156,11 +166,14 @@ public class SaveGame {
             final List<String> names = Arrays.asList("name", "objectsIDs", "background");
             for (Field f : cv.getFields()) {
                 if (!(names.contains(f.getName()))) {
-                    try {
-                        f.setAccessible(true);
-                        v.additionalData.put(f.getName(), f.get(rd.getValue()));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace(System.err);
+                    final boolean isAnnotation = f.isAnnotationPresent(JEngineToSave.class);
+                    if ((!cv.getSimpleName().equals(ROOM_NAME)) && (isAnnotation)) {
+                        try {
+                            f.setAccessible(true);
+                            v.additionalData.put(f.getName(), f.get(rd.getValue()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace(System.err);
+                        }
                     }
                 }
             }
@@ -180,11 +193,14 @@ public class SaveGame {
             final List<String> names = Arrays.asList("name", "sprite", "depth", "visible", "x", "y", "compareByDepth");
             for (Field f : cv.getFields()) {
                 if (!(names.contains(f.getName()))) {
-                    try {
-                        f.setAccessible(true);
-                        v.additionalData.put(f.getName(), f.get(rd.getValue()));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace(System.err);
+                    final boolean isAnnotation = f.isAnnotationPresent(JEngineToSave.class);
+                    if ((!cv.getSimpleName().equals(OBJECT_NAME)) && (isAnnotation)) {
+                        try {
+                            f.setAccessible(true);
+                            v.additionalData.put(f.getName(), f.get(rd.getValue()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace(System.err);
+                        }
                     }
                 }
             }
@@ -200,11 +216,14 @@ public class SaveGame {
             final List<String> names = Arrays.asList("name", "sprite", "visible");
             for (Field f : cv.getFields()) {
                 if (!(names.contains(f.getName()))) {
-                    try {
-                        f.setAccessible(true);
-                        v.additionalData.put(f.getName(), f.get(rd.getValue()));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace(System.err);
+                    final boolean isAnnotation = f.isAnnotationPresent(JEngineToSave.class);
+                    if ((!cv.getSimpleName().equals(BACKGROUND_NAME)) && (isAnnotation)) {
+                        try {
+                            f.setAccessible(true);
+                            v.additionalData.put(f.getName(), f.get(rd.getValue()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace(System.err);
+                        }
                     }
                 }
             }

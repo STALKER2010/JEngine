@@ -27,6 +27,9 @@ public class BasicRender {
     public boolean isInitialized = false;
 
     public boolean init() {
+        System.setProperty("sun.java2d.transaccel", "True");
+        System.setProperty("sun.java2d.d3d", "True");
+        System.setProperty("sun.java2d.ddforcevram", "True");
         bss = game.getBufferStrategy();
         if (bss == null) {
             game.createBufferStrategy(2);
@@ -37,6 +40,9 @@ public class BasicRender {
             System.err.println("BasicRender: Can't create buffer strategy");
             return false;
         }
+        if (gl == null) {
+            gl = bss.getDrawGraphics();
+        }
         isInitialized = true;
         return true;
     }
@@ -44,13 +50,6 @@ public class BasicRender {
     public final java.util.List<GameObject> objs = new ArrayList<>();
 
     public void render(final Room room) {
-        if (!isInitialized) {
-            System.err.println("BasicRender: Render not initialized");
-            return;
-        }
-        gl = bss.getDrawGraphics();
-        gl.setColor(Color.white);
-        gl.fillRect(0, 0, game.getWidth(), game.getHeight());
         gl.setColor(Color.black);
         {
             if (room.background != null) {
@@ -74,6 +73,5 @@ public class BasicRender {
             }
         }
         bss.show();
-        gl.dispose();
     }
 }
