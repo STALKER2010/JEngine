@@ -46,7 +46,7 @@ public class Game extends Canvas implements Runnable {
 
     public void run() {
         int loops;
-        if (!init()) {
+        if (init()) {
             System.err.println("Failed to initialized Game");
             return;
         }
@@ -92,11 +92,11 @@ public class Game extends Canvas implements Runnable {
         addMouseListener(mouseListener);
         if (!render.init()) {
             System.err.println("Game: Render not initialized correctly");
-            return false;
+            return true;
         }
         db.onGameLoaded(this);
         currentRoom = "main_menu_room";
-        return true;
+        return false;
     }
 
     private BasicRender render;
