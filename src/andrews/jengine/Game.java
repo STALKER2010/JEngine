@@ -95,7 +95,7 @@ public class Game extends Canvas implements Runnable {
             return true;
         }
         db.onGameLoaded(this);
-        currentRoom = "main_menu_room";
+        currentRoom = "";
         return false;
     }
 
